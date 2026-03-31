@@ -19,22 +19,57 @@ export default function ScratchOffCanvas({ width = 250, height = 250, revealText
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Fill with rich metallic gold gradient
-        const gradient = ctx.createRadialGradient(width / 2, height / 2, 10, width / 2, height / 2, width / 2);
-        gradient.addColorStop(0, '#FFF5D6'); // bright center highlight
-        gradient.addColorStop(0.2, '#F3E5AB');
-        gradient.addColorStop(0.5, '#D4AF37'); // base gold
-        gradient.addColorStop(0.8, '#AA7900'); // shadow transition
-        gradient.addColorStop(1, '#8A5A00'); // dark metallic edge
+        // ── Metallic Gold Coin Effect ──
+        const cx = width / 2;
+        const cy = height / 2;
+        const r = Math.min(cx, cy);
 
-        ctx.fillStyle = gradient;
+        // 1. Base dark gold fill (clipped to circle)
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.clip();
+
+        ctx.fillStyle = '#B07D20';
         ctx.fillRect(0, 0, width, height);
 
-        // Optional: Add some noise/texture to look like a scratch card
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-        for (let i = 0; i < 500; i++) {
-            ctx.fillRect(Math.random() * width, Math.random() * height, 2, 2);
+        // 2. Conic spin-gradient: 180 thin pie slices alternating bright/mid gold
+        const slices = 180;
+        for (let i = 0; i < slices; i++) {
+            const a1 = (i / slices) * Math.PI * 2;
+            const a2 = ((i + 1) / slices) * Math.PI * 2;
+            // Alternating bright / slightly darker bands using a sine wave
+            const t = 0.5 + 0.5 * Math.sin(i * 1.2 + 0.3);
+            const rC = Math.round(190 + t * 55);   // 190–245
+            const gC = Math.round(138 + t * 47);   // 138–185
+            const bC = Math.round(20 + t * 25);   // 20–45
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, r, a1, a2);
+            ctx.closePath();
+            ctx.fillStyle = `rgb(${rC},${gC},${bC})`;
+            ctx.fill();
         }
+
+        // 3. Specular highlight — off-center radial, upper-left quadrant
+        const hx = cx - r * 0.18;
+        const hy = cy - r * 0.18;
+        const hl = ctx.createRadialGradient(hx, hy, 0, hx, hy, r * 0.9);
+        hl.addColorStop(0, 'rgba(255, 245, 185, 0.88)');
+        hl.addColorStop(0.18, 'rgba(235, 200, 100, 0.55)');
+        hl.addColorStop(0.45, 'rgba(200, 155,  40, 0.15)');
+        hl.addColorStop(1, 'rgba(0,   0,    0,  0)');
+        ctx.fillStyle = hl;
+        ctx.fillRect(0, 0, width, height);
+
+        // 4. Edge vignette — darkens the rim like a real coin
+        const vg = ctx.createRadialGradient(cx, cy, r * 0.62, cx, cy, r);
+        vg.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        vg.addColorStop(1, 'rgba(0, 0, 0, 0.38)');
+        ctx.fillStyle = vg;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.restore();
 
         let isDrawing = false;
 
