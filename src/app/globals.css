@@ -7,7 +7,21 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+
+  /* Theatre Demo Custom Brand Colors */
+  --color-brand-bg: #F9F6F1;
+  --color-brand-dark: #3C2A21;
+  --color-brand-accent: #8C6A5D;
+  --color-brand-red: #962828;
+  --color-brand-red-dark: #721c1c;
+  --color-brand-gold: #D4AF37;
+  --color-brand-gold-light: #F3E5AB;
+
+  /* Theatre Font Family Setup */
+  --font-serif: var(--font-playfair), serif;
+  --font-script: var(--font-great-vibes), cursive;
+  --font-sans: var(--font-montserrat), sans-serif;
+
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -121,9 +135,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
