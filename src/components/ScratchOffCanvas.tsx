@@ -6,9 +6,10 @@ interface ScratchOffCanvasProps {
     width?: number;
     height?: number;
     revealText: string;
+    onScratchComplete?: () => void;
 }
 
-export default function ScratchOffCanvas({ width = 250, height = 250, revealText }: ScratchOffCanvasProps) {
+export default function ScratchOffCanvas({ width = 250, height = 250, revealText, onScratchComplete }: ScratchOffCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isScratched, setIsScratched] = useState(false);
 
@@ -137,6 +138,7 @@ export default function ScratchOffCanvas({ width = 250, height = 250, revealText
 
             if (percentage > 50) {
                 setIsScratched(true);
+                onScratchComplete?.();
                 // Fade out the rest of the canvas automatically
                 canvas.style.transition = 'opacity 1s ease-out';
                 canvas.style.opacity = '0';
@@ -163,7 +165,7 @@ export default function ScratchOffCanvas({ width = 250, height = 250, revealText
             canvas.removeEventListener('touchmove', handleMove);
             window.removeEventListener('touchend', handleEnd);
         };
-    }, [width, height, isScratched]);
+    }, [width, height, isScratched, onScratchComplete]);
 
     return (
         <div className="relative inline-block rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.4)] ring-4 ring-white" style={{ width, height }}>

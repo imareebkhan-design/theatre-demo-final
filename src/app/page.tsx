@@ -5,7 +5,7 @@ import CurtainReveal from '../components/CurtainReveal';
 import ScratchOffCanvas from '../components/ScratchOffCanvas';
 import FlockingBirds from '../components/FlockingBirds';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /* ─────────────── Countdown Component ─────────────── */
 function Countdown() {
@@ -316,6 +316,7 @@ const Section = ({ children, className = '', dark = false }: { children: React.R
 export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [rsvpChoice, setRsvpChoice] = useState<'yes' | 'no' | null>(null);
+  const [scratchedCount, setScratchedCount] = useState(0);
 
   return (
     <div className="relative min-h-screen bg-[#F4EDE4] text-brand-dark overflow-hidden font-sans">
@@ -336,11 +337,6 @@ export default function Home() {
         <button className="w-10 h-10 bg-white/70 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center pointer-events-auto border border-brand-accent/10">
           <Info size={16} className="text-brand-red-dark" />
         </button>
-
-        <div className="flex bg-white/70 backdrop-blur-md rounded-full shadow-sm p-1 ml-4 pointer-events-auto border border-brand-accent/10">
-          <button className="px-4 py-1.5 rounded-full text-[10px] font-semibold bg-brand-red-dark text-white shadow">EN</button>
-          <button className="px-4 py-1.5 rounded-full text-[10px] font-semibold text-brand-red-dark hover:bg-gray-50 transition-colors">IT</button>
-        </div>
       </header>
 
       <CurtainReveal>
@@ -374,193 +370,203 @@ export default function Home() {
               <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/70 font-semibold">Scratch to discover the date</p>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 pt-4">
-              <ScratchOffCanvas width={200} height={200} revealText="10" />
-              <ScratchOffCanvas width={200} height={200} revealText="Sept" />
-              <ScratchOffCanvas width={200} height={200} revealText="2027" />
+              <ScratchOffCanvas width={200} height={200} revealText="10" onScratchComplete={() => setScratchedCount(p => p + 1)} />
+              <ScratchOffCanvas width={200} height={200} revealText="Sept" onScratchComplete={() => setScratchedCount(p => p + 1)} />
+              <ScratchOffCanvas width={200} height={200} revealText="2027" onScratchComplete={() => setScratchedCount(p => p + 1)} />
             </div>
           </div>
         </Section>
 
-        {/* ── SECTION 3: COUNTDOWN + VENUE ── */}
-        <Section>
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="font-script text-6xl sm:text-7xl text-brand-red-dark">Countdown</h2>
-            <Countdown />
-            <p className="font-serif italic text-brand-red-dark/50 text-sm pt-2">until the big day</p>
+        <AnimatePresence>
+          {scratchedCount >= 3 && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            >
+              {/* ── SECTION 3: COUNTDOWN + VENUE ── */}
+              <Section>
+                <div className="max-w-3xl mx-auto space-y-6">
+                  <h2 className="font-script text-6xl sm:text-7xl text-brand-red-dark">Countdown</h2>
+                  <Countdown />
+                  <p className="font-serif italic text-brand-red-dark/50 text-sm pt-2">until the big day</p>
 
-            <div className="pt-16 space-y-6">
-              <p className="font-serif text-[10px] tracking-[0.25em] uppercase text-brand-red-dark/60">The celebration will take place at</p>
-              <VenueIllustration />
-              <div className="space-y-1 pt-2">
-                <h3 className="font-serif text-4xl sm:text-5xl text-brand-red-dark">Villa Medicea di Artimino</h3>
-                <p className="font-serif text-[10px] tracking-[0.2em] uppercase text-brand-red-dark/60 pt-2">
-                  Via di Papa Leone X, 28 · Artimino, Florencia
-                </p>
-                <p className="font-serif text-2xl sm:text-3xl text-brand-red-dark pt-4">September 10, 2027</p>
-                <p className="font-script text-4xl text-brand-red-dark/70 pt-2">Reception to Follow</p>
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        {/* ── SECTION 4: MENU ── */}
-        <Section dark>
-          <div className="max-w-lg mx-auto space-y-0 w-full">
-            <MenuRibbonFrame />
-            {/* Wavy border card */}
-            <div className="border border-brand-red-dark/25 px-10 py-12 space-y-8 -mt-2">
-              {[
-                { course: 'APERITIVO', line1: 'Selección de antipasti toscanos', line2: 'Bruschetta, crostini & affettati misti' },
-                { course: 'PRIMO', line1: 'Risotto al tartufo nero di Norcia', line2: 'con parmigiano reggiano 24 mesi' },
-                { course: 'SECONDO', line1: 'Filetto di manzo alla griglia', line2: 'con salsa al vino rosso e verdure di stagione' },
-                { course: 'DOLCE', line1: 'Torta nuziale con crema di mascarpone', line2: 'e frutti di bosco freschi' },
-              ].map((item) => (
-                <div key={item.course} className="space-y-1">
-                  <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark">{item.course}</p>
-                  <p className="font-serif text-sm text-brand-red-dark/80">{item.line1}</p>
-                  <p className="font-serif italic text-sm text-brand-red-dark/60">{item.line2}</p>
+                  <div className="pt-16 space-y-6">
+                    <p className="font-serif text-[10px] tracking-[0.25em] uppercase text-brand-red-dark/60">The celebration will take place at</p>
+                    <VenueIllustration />
+                    <div className="space-y-1 pt-2">
+                      <h3 className="font-serif text-4xl sm:text-5xl text-brand-red-dark">Villa Medicea di Artimino</h3>
+                      <p className="font-serif text-[10px] tracking-[0.2em] uppercase text-brand-red-dark/60 pt-2">
+                        Via di Papa Leone X, 28 · Artimino, Florence
+                      </p>
+                      <p className="font-serif text-2xl sm:text-3xl text-brand-red-dark pt-4">September 10, 2027</p>
+                      <p className="font-script text-4xl text-brand-red-dark/70 pt-2">Reception to Follow</p>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <MenuRibbonBottom />
-            <div className="pt-4 space-y-4">
-              <DinnerTableIllustration />
-              <p className="font-script text-3xl text-brand-red-dark italic">Vini della Tenuta</p>
-            </div>
-          </div>
-        </Section>
+              </Section>
 
-        {/* ── SECTION 5: DRESS CODE ── */}
-        <Section>
-          <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="font-script text-6xl sm:text-7xl text-brand-red-dark">Dress Code</h2>
-            <DressCodeFigures />
-            <p className="font-serif text-sm text-brand-red-dark/70 max-w-md mx-auto leading-relaxed">
-              We invite you to dress elegantly and formally to celebrate this special day with us.
-            </p>
-            <h3 className="font-serif text-4xl sm:text-5xl text-brand-red-dark pt-2">Formal Attire</h3>
-            <p className="font-script text-3xl text-brand-red-dark/60 italic">Please avoid wearing white</p>
-          </div>
-        </Section>
-
-        {/* ── SECTION 6: GIFTS ── */}
-        <Section dark>
-          <div className="max-w-lg mx-auto space-y-6">
-            <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/60">Wedding Registry</p>
-            <WeddingCarIllustration />
-            <h2 className="font-serif text-5xl sm:text-6xl text-brand-red-dark">Gifts</h2>
-            <p className="font-serif text-sm text-brand-red-dark/70 max-w-md mx-auto leading-relaxed">
-              Your presence is the best gift we could receive. However, if you wish to contribute to our new life together, you can do so via bank transfer.
-            </p>
-            <p className="font-script text-3xl text-brand-red-dark italic pt-2">With all our love</p>
-
-            <div className="pt-4 space-y-3">
-              <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/60">Bank Details</p>
-              <div className="border border-brand-red-dark/30 rounded-sm px-8 py-6 text-left space-y-2">
-                <p className="font-serif text-xs text-brand-red-dark tracking-widest uppercase">Account Holder: Sam &amp; Sofia</p>
-                <p className="font-serif text-xs text-brand-red-dark tracking-wider">IBAN: IT60 X054 2811 1010 0000 0123 456</p>
-                <p className="font-serif text-xs text-brand-red-dark tracking-wider">BIC/SWIFT: BLOPIT22</p>
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        {/* ── SECTION 7: TRANSPORT ── */}
-        <Section>
-          <div className="max-w-lg mx-auto space-y-6">
-            <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/60">Getting There</p>
-            <h2 className="font-serif text-5xl sm:text-6xl text-brand-red-dark">Transport</h2>
-            <div className="space-y-4 text-sm text-brand-red-dark/80 font-serif">
-              <p>A private bus will be available for guests departing from <strong>Piazza della Signoria, Florence</strong>.</p>
-              <div className="border-t border-brand-red-dark/15 pt-4 space-y-2">
-                <p className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/50">Departure</p>
-                <p>Saturday, September 10 · <span className="font-semibold">2:30 PM</span></p>
-              </div>
-              <div className="border-t border-brand-red-dark/15 pt-4 space-y-2">
-                <p className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/50">Return</p>
-                <p>Saturday, September 10 · <span className="font-semibold">1:00 AM</span></p>
-              </div>
-            </div>
-            <p className="font-serif italic text-brand-red-dark/50 text-xs pt-4">
-              Please indicate in your RSVP if you need transport.
-            </p>
-          </div>
-        </Section>
-
-        {/* ── SECTION 8: RSVP ── */}
-        <Section dark>
-          <div className="max-w-xl w-full mx-auto space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/70 border border-brand-red-dark/20 rounded-full px-4 py-2">
-              <Info size={12} className="text-brand-red-dark/60" />
-              <span className="font-serif text-[10px] tracking-wide text-brand-red-dark/70">This form is fully customizable to your needs</span>
-            </div>
-
-            <h2 className="font-script text-5xl sm:text-6xl text-brand-red-dark">Confirm your attendance</h2>
-
-            {/* Form card */}
-            <div className="bg-white/60 backdrop-blur-sm border border-brand-red-dark/15 rounded-sm p-8 w-full text-left space-y-6">
-              <div className="space-y-1">
-                <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Full Name *</label>
-                <input
-                  type="text"
-                  placeholder="Your name"
-                  className="w-full border border-brand-red-dark/20 rounded-none bg-transparent px-4 py-3 font-serif text-sm text-brand-red-dark placeholder:text-brand-red-dark/30 focus:outline-none focus:border-brand-red-dark/50"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Email (Optional)</label>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="w-full border border-brand-red-dark/20 rounded-none bg-transparent px-4 py-3 font-serif text-sm text-brand-red-dark placeholder:text-brand-red-dark/30 focus:outline-none focus:border-brand-red-dark/50"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Will you attend? *</label>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setRsvpChoice('yes')}
-                    className={`flex-1 py-3 border rounded-none font-serif text-sm transition-all ${rsvpChoice === 'yes'
-                        ? 'bg-brand-red-dark text-white border-brand-red-dark'
-                        : 'border-brand-red-dark/25 text-brand-red-dark hover:border-brand-red-dark/60'
-                      }`}
-                  >
-                    Yes, I&apos;ll be there!
-                  </button>
-                  <button
-                    onClick={() => setRsvpChoice('no')}
-                    className={`flex-1 py-3 border rounded-none font-serif text-sm transition-all ${rsvpChoice === 'no'
-                        ? 'bg-brand-red-dark text-white border-brand-red-dark'
-                        : 'border-brand-red-dark/25 text-brand-red-dark hover:border-brand-red-dark/60'
-                      }`}
-                  >
-                    No, I can&apos;t make it
-                  </button>
+              {/* ── SECTION 4: MENU ── */}
+              <Section dark>
+                <div className="max-w-lg mx-auto space-y-0 w-full">
+                  <MenuRibbonFrame />
+                  {/* Wavy border card */}
+                  <div className="border border-brand-red-dark/25 px-10 py-12 space-y-8 -mt-2">
+                    {[
+                      { course: 'STARTER', line1: 'Selection of Tuscan antipasti', line2: 'Bruschetta, crostini & mixed cold cuts' },
+                      { course: 'FIRST COURSE', line1: 'Black truffle risotto from Norcia', line2: 'with 24-month Parmigiano Reggiano' },
+                      { course: 'MAIN COURSE', line1: 'Grilled beef fillet', line2: 'with red wine sauce and seasonal vegetables' },
+                      { course: 'DESSERT', line1: 'Wedding cake with mascarpone cream', line2: 'and fresh berries' },
+                    ].map((item) => (
+                      <div key={item.course} className="space-y-1">
+                        <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark">{item.course}</p>
+                        <p className="font-serif text-sm text-brand-red-dark/80">{item.line1}</p>
+                        <p className="font-serif italic text-sm text-brand-red-dark/60">{item.line2}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <MenuRibbonBottom />
+                  <div className="pt-4 space-y-4">
+                    <DinnerTableIllustration />
+                    <p className="font-script text-3xl text-brand-red-dark italic">Estate Wines</p>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Message For The Couple (Optional)</label>
-                <textarea
-                  placeholder="Write us a few words..."
-                  rows={4}
-                  className="w-full border border-brand-red-dark/20 rounded-none bg-transparent px-4 py-3 font-serif text-sm text-brand-red-dark placeholder:text-brand-red-dark/30 focus:outline-none focus:border-brand-red-dark/50 resize-none"
-                />
-              </div>
-              <button className="w-full py-4 bg-[#8B6060]/80 hover:bg-brand-red-dark text-white font-serif text-sm tracking-widest uppercase transition-colors flex items-center justify-center gap-3">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
-                Confirm
-              </button>
-            </div>
-          </div>
-        </Section>
+              </Section>
 
-        {/* ── SECTION 9: FOOTER – THANK YOU CARD ── */}
-        <section className="w-full py-24 px-8 flex flex-col items-center bg-[#F4EDE4]">
-          <div className="max-w-md w-full">
-            <ThankYouCard />
-          </div>
-        </section>
+              {/* ── SECTION 5: DRESS CODE ── */}
+              <Section>
+                <div className="max-w-2xl mx-auto space-y-6">
+                  <h2 className="font-script text-6xl sm:text-7xl text-brand-red-dark">Dress Code</h2>
+                  <DressCodeFigures />
+                  <p className="font-serif text-sm text-brand-red-dark/70 max-w-md mx-auto leading-relaxed">
+                    We invite you to dress elegantly and formally to celebrate this special day with us.
+                  </p>
+                  <h3 className="font-serif text-4xl sm:text-5xl text-brand-red-dark pt-2">Formal Attire</h3>
+                  <p className="font-script text-3xl text-brand-red-dark/60 italic">Please avoid wearing white</p>
+                </div>
+              </Section>
+
+              {/* ── SECTION 6: GIFTS ── */}
+              <Section dark>
+                <div className="max-w-lg mx-auto space-y-6">
+                  <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/60">Wedding Registry</p>
+                  <WeddingCarIllustration />
+                  <h2 className="font-serif text-5xl sm:text-6xl text-brand-red-dark">Gifts</h2>
+                  <p className="font-serif text-sm text-brand-red-dark/70 max-w-md mx-auto leading-relaxed">
+                    Your presence is the best gift we could receive. However, if you wish to contribute to our new life together, you can do so via bank transfer.
+                  </p>
+                  <p className="font-script text-3xl text-brand-red-dark italic pt-2">With all our love</p>
+
+                  <div className="pt-4 space-y-3">
+                    <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/60">Bank Details</p>
+                    <div className="border border-brand-red-dark/30 rounded-sm px-8 py-6 text-left space-y-2">
+                      <p className="font-serif text-xs text-brand-red-dark tracking-widest uppercase">Account Holder: Sam &amp; Sofia</p>
+                      <p className="font-serif text-xs text-brand-red-dark tracking-wider">IBAN: IT60 X054 2811 1010 0000 0123 456</p>
+                      <p className="font-serif text-xs text-brand-red-dark tracking-wider">BIC/SWIFT: BLOPIT22</p>
+                    </div>
+                  </div>
+                </div>
+              </Section>
+
+              {/* ── SECTION 7: TRANSPORT ── */}
+              <Section>
+                <div className="max-w-lg mx-auto space-y-6">
+                  <p className="font-serif text-[10px] tracking-[0.3em] uppercase text-brand-red-dark/60">Getting There</p>
+                  <h2 className="font-serif text-5xl sm:text-6xl text-brand-red-dark">Transport</h2>
+                  <div className="space-y-4 text-sm text-brand-red-dark/80 font-serif">
+                    <p>A private bus will be available for guests departing from <strong>Piazza della Signoria, Florence</strong>.</p>
+                    <div className="border-t border-brand-red-dark/15 pt-4 space-y-2">
+                      <p className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/50">Departure</p>
+                      <p>Saturday, September 10 · <span className="font-semibold">2:30 PM</span></p>
+                    </div>
+                    <div className="border-t border-brand-red-dark/15 pt-4 space-y-2">
+                      <p className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/50">Return</p>
+                      <p>Saturday, September 10 · <span className="font-semibold">1:00 AM</span></p>
+                    </div>
+                  </div>
+                  <p className="font-serif italic text-brand-red-dark/50 text-xs pt-4">
+                    Please indicate in your RSVP if you need transport.
+                  </p>
+                </div>
+              </Section>
+
+              {/* ── SECTION 8: RSVP ── */}
+              <Section dark>
+                <div className="max-w-xl w-full mx-auto space-y-8">
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 bg-white/70 border border-brand-red-dark/20 rounded-full px-4 py-2">
+                    <Info size={12} className="text-brand-red-dark/60" />
+                    <span className="font-serif text-[10px] tracking-wide text-brand-red-dark/70">This form is fully customizable to your needs</span>
+                  </div>
+
+                  <h2 className="font-script text-5xl sm:text-6xl text-brand-red-dark">Confirm your attendance</h2>
+
+                  {/* Form card */}
+                  <div className="bg-white/60 backdrop-blur-sm border border-brand-red-dark/15 rounded-sm p-8 w-full text-left space-y-6">
+                    <div className="space-y-1">
+                      <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Full Name *</label>
+                      <input
+                        type="text"
+                        placeholder="Your name"
+                        className="w-full border border-brand-red-dark/20 rounded-none bg-transparent px-4 py-3 font-serif text-sm text-brand-red-dark placeholder:text-brand-red-dark/30 focus:outline-none focus:border-brand-red-dark/50"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Email (Optional)</label>
+                      <input
+                        type="email"
+                        placeholder="your@email.com"
+                        className="w-full border border-brand-red-dark/20 rounded-none bg-transparent px-4 py-3 font-serif text-sm text-brand-red-dark placeholder:text-brand-red-dark/30 focus:outline-none focus:border-brand-red-dark/50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Will you attend? *</label>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => setRsvpChoice('yes')}
+                          className={`flex-1 py-3 border rounded-none font-serif text-sm transition-all ${rsvpChoice === 'yes'
+                            ? 'bg-brand-red-dark text-white border-brand-red-dark'
+                            : 'border-brand-red-dark/25 text-brand-red-dark hover:border-brand-red-dark/60'
+                            }`}
+                        >
+                          Yes, I&apos;ll be there!
+                        </button>
+                        <button
+                          onClick={() => setRsvpChoice('no')}
+                          className={`flex-1 py-3 border rounded-none font-serif text-sm transition-all ${rsvpChoice === 'no'
+                            ? 'bg-brand-red-dark text-white border-brand-red-dark'
+                            : 'border-brand-red-dark/25 text-brand-red-dark hover:border-brand-red-dark/60'
+                            }`}
+                        >
+                          No, I can&apos;t make it
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-serif text-[10px] tracking-widest uppercase text-brand-red-dark/70">Message For The Couple (Optional)</label>
+                      <textarea
+                        placeholder="Write us a few words..."
+                        rows={4}
+                        className="w-full border border-brand-red-dark/20 rounded-none bg-transparent px-4 py-3 font-serif text-sm text-brand-red-dark placeholder:text-brand-red-dark/30 focus:outline-none focus:border-brand-red-dark/50 resize-none"
+                      />
+                    </div>
+                    <button className="w-full py-4 bg-[#8B6060]/80 hover:bg-brand-red-dark text-white font-serif text-sm tracking-widest uppercase transition-colors flex items-center justify-center gap-3">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </Section>
+
+              {/* ── SECTION 9: FOOTER – THANK YOU CARD ── */}
+              <section className="w-full py-24 px-8 flex flex-col items-center bg-[#F4EDE4]">
+                <div className="max-w-md w-full">
+                  <ThankYouCard />
+                </div>
+              </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Floating Sound Toggle */}
         <button
