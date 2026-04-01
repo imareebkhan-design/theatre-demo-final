@@ -354,10 +354,10 @@ export default function Home() {
               <line x1="120" y1="7.5" x2="200" y2="7.5" strokeWidth="0.5" />
             </svg>
 
-            <div className="flex flex-col items-center -space-y-4 sm:-space-y-6">
-              <h1 className="font-script text-[8rem] sm:text-[11rem] text-brand-red-dark leading-none">Aisha</h1>
-              <span className="font-script text-5xl text-brand-red-dark/60 relative z-10">&amp;</span>
-              <h1 className="font-script text-[8rem] sm:text-[11rem] text-brand-red-dark leading-none">Zayan</h1>
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 py-4">
+              <h1 className="font-script text-[6rem] sm:text-[9rem] text-brand-red-dark leading-none">Aisha</h1>
+              <span className="font-script text-5xl sm:text-6xl text-brand-red-dark/60">&amp;</span>
+              <h1 className="font-script text-[6rem] sm:text-[9rem] text-brand-red-dark leading-none">Zayan</h1>
             </div>
 
             <p className="font-serif tracking-[0.25em] uppercase text-[10px] text-brand-red-dark/80 pt-6">
