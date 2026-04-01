@@ -341,19 +341,53 @@ export default function Home() {
 
       <CurtainReveal>
         {/* ── SECTION 1: HERO INVITATION ── */}
-        <Section className="min-h-screen justify-center">
+        <Section className="min-h-screen justify-center pt-24 pb-12">
           <div className="max-w-3xl mx-auto space-y-8">
-            <p className="font-serif tracking-[0.18em] uppercase text-[10px] text-brand-red-dark/70">
-              You are cordially invited to celebrate the wedding of
+
+            <p className="font-serif text-4xl text-brand-red-dark/80" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+              بِسْمِ ٱللَّٰهِ
             </p>
-            <div className="flex flex-col items-center -space-y-3">
-              <h1 className="font-script text-[9rem] sm:text-[11rem] text-brand-red-dark leading-none">Sam</h1>
-              <span className="font-script text-5xl text-brand-red-dark/60">&amp;</span>
-              <h1 className="font-script text-[9rem] sm:text-[11rem] text-brand-red-dark leading-none">Sofia</h1>
+
+            <svg viewBox="0 0 200 15" className="w-32 mx-auto text-brand-red-dark opacity-50 stroke-current my-6">
+              <line x1="0" y1="7.5" x2="80" y2="7.5" strokeWidth="0.5" />
+              <path d="M100,3 L104,7.5 L100,12 L96,7.5 Z" fill="currentColor" stroke="none" />
+              <line x1="120" y1="7.5" x2="200" y2="7.5" strokeWidth="0.5" />
+            </svg>
+
+            <div className="flex flex-col items-center -space-y-4 sm:-space-y-6">
+              <h1 className="font-script text-[8rem] sm:text-[11rem] text-brand-red-dark leading-none">Aisha</h1>
+              <span className="font-script text-5xl text-brand-red-dark/60 relative z-10">&amp;</span>
+              <h1 className="font-script text-[8rem] sm:text-[11rem] text-brand-red-dark leading-none">Zayan</h1>
             </div>
-            <p className="font-serif text-[10px] tracking-[0.18em] uppercase text-brand-red-dark/70 max-w-lg mx-auto leading-relaxed">
-              We would like to invite you to celebrate with us the most special day of our lives. It would be an honor to have you present at this important moment.
+
+            <p className="font-serif tracking-[0.25em] uppercase text-[10px] text-brand-red-dark/80 pt-6">
+              Request the honour of your presence
             </p>
+
+            <div className="space-y-3 pt-4">
+              <p className="font-serif tracking-[0.3em] text-lg sm:text-xl text-brand-red-dark/90">
+                14 · 02 · 2027
+              </p>
+              <p className="font-serif text-xs text-brand-red-dark/60 tracking-wider">
+                Saturday Evening
+              </p>
+            </div>
+
+            <div className="space-y-1 pt-6">
+              <p className="font-serif italic text-xl sm:text-2xl text-brand-red-dark/90">
+                Taj Falaknuma Palace
+              </p>
+              <p className="font-serif text-[10px] tracking-widest text-brand-red-dark/60 uppercase">
+                Hyderabad, India
+              </p>
+            </div>
+
+            <svg viewBox="0 0 200 15" className="w-32 mx-auto text-brand-red-dark opacity-50 stroke-current my-6">
+              <line x1="0" y1="7.5" x2="80" y2="7.5" strokeWidth="0.5" />
+              <path d="M100,3 L104,7.5 L100,12 L96,7.5 Z" fill="currentColor" stroke="none" />
+              <line x1="120" y1="7.5" x2="200" y2="7.5" strokeWidth="0.5" />
+            </svg>
+
             <div className="flex flex-col items-center pt-8 opacity-50 animate-bounce">
               <span className="font-serif text-[9px] tracking-[0.3em] uppercase text-brand-red-dark">Scroll</span>
               <span className="text-brand-red-dark text-lg">↓</span>
